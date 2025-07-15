@@ -1,73 +1,132 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TextInput
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+  Box,
+  Center,
+  Text,
+  VStack,
+  Input,
+  Button,
+  Image,
+  Pressable,
+  Icon,
+  ScrollView
+} from 'native-base';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+import logo from "../assets/aziziLogo.png";
+
+export default function LoginScreen({ setIsLoggedIn }) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Box flex={1} bg="white">
+          <Center mt={16}>
+            <Image
+              source={logo}
+              alt="aziziLogo"
+              resizeMode="contain"
+              width={100}
+              height={100}
+            />
+          </Center>
 
-      {/* Email Input */}
-      <View style={styles.inputContainer}>
-        <Ionicons name="mail" size={20} color="#555" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
+          <Box flex={1} mt={12} px={10} pt={10}>
+            <ScrollView keyboardShouldPersistTaps="handled">
+              <VStack space={4} mt={12}>
+                <Box bg="gray.50" borderColor="gray.400" rounded="md" p={1}>
+                  {/* <FontAwesome name="user-circle" size={5} color="gray.700" ml={3} /> */}
+                  <TextInput
+                    style={{ height: 50, fontSize: 16, paddingLeft: 10, borderWidth: 1, borderColor: 'gray', borderRadius: 7 }}
+                    value={username}
+                    onChangeText={setUsername}
+                    placeholder="Email Address"
+                    placeholderTextColor="#01284294"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="email"
+                    textContentType="emailAddress"
+                    importantForAutofill="yes" // Helps autofill on iOS
+                    name="email" // Explicit hint for iOS autofill
+                  />
+                </Box>
+                {/* Password Input */} 
+                <Box position="relative" bg="gray.50" borderColor="gray.400" rounded="md" p={1}>
+                  <TextInput
+                    style={{ height: 50, fontSize: 16, paddingLeft: 10, borderWidth: 1, borderColor: 'gray', borderRadius: 7 }}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Password"
+                    placeholderTextColor="#01284294"
+                    secureTextEntry={!showPassword}
+                  />
+                  <Pressable onPress={() => setShowPassword(!showPassword)}
+                    position="absolute"
+                    right={4}
+                    top="50%">
+                    <Icon
+                      as={FontAwesome}
+                      name={showPassword ? "eye" : "eye-slash"}
+                      size={5}
+                      mr={3}
+                      color="gray.700"
+                    />
+                  </Pressable>
+                </Box>
 
-      {/* Password Input */}
-      <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed" size={20} color="#555" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={!showPassword}
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-          <Ionicons
-            name={showPassword ? 'eye-off' : 'eye'}
-            size={20}
-            color="#555"
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
+                {/* <Input
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChangeText={setPassword}
+                  bg="#f1f1f1"
+                  borderRadius={10}
+                  fontSize={16}
+                  h={44}
+                  InputLeftElement={
+                    <Icon as={FontAwesome} name="lock" size={6} ml={3} color="gray.700" />
+                  }
+                  InputRightElement={
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      <Icon
+                        as={FontAwesome}
+                        name={showPassword ? "eye" : "eye-slash"}
+                        size={5}
+                        mr={3}
+                        color="gray.700"
+                      />
+                    </Pressable>
+                  }
+                /> */}
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
-    </View>
+                <Button
+                  mt={4}
+                  borderRadius={10}
+                  bg="rgb(63 98 137)"
+                  _text={{ fontWeight: 'bold', fontSize: 16 }}
+                  onPress={() => setIsLoggedIn(true)}
+                >
+                  Login
+                </Button>
+              </VStack>
+            </ScrollView>
+          </Box>
+        </Box>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 24, justifyContent: 'center', },
-  title: { fontSize: 26, fontWeight: 'bold', color: '#007AFF', textAlign: 'center', marginBottom: 6, },
-  subtitle: { fontSize: 16, textAlign: 'center', color: '#666', marginBottom: 30, },
-  inputContainer: {
-    flexDirection: 'row', alignItems: 'center', borderColor: '#ccc', borderWidth: 1,
-    borderRadius: 8, marginBottom: 20, paddingHorizontal: 12, height: 48,
-  },
-  icon: { marginRight: 6, },
-  input: { flex: 1, fontSize: 16, },
-  button: {
-    backgroundColor: '#007AFF', paddingVertical: 14, borderRadius: 8, alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: { color: '#fff', fontWeight: '600', fontSize: 16, },
-});

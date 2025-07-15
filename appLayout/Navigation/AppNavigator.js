@@ -17,6 +17,7 @@ export default function AppNavigator() {
           <Stack.Screen name="Login">
             {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
           </Stack.Screen>
+          
         ) : (
           <Stack.Screen name="Main" component={BottomTabs} />
         )}
